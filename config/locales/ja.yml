@@ -1,0 +1,9 @@
+ja:
+  devise:
+    email: "メールアドレス"
+    password: "パスワード"
+    password_confirmation: "パスワード確認"
+    sign_up: "新規登録"
+    name: "名前"
+    sex: "性別"
+    icon: "アイコンURL"
