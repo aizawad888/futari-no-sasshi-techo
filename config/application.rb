@@ -27,5 +27,9 @@ module Myapp
     # config.eager_load_paths << Rails.root.join("extras")
 
     config.i18n.default_locale = :ja
+
+    config.generators do |g|
+      g.test_framework nil
+    end
   end
 end
