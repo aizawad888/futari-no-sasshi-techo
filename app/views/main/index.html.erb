@@ -4,6 +4,11 @@
 
 <div class="max-w-md mx-auto px-4 py-4 space-y-4">
 
+  <div>
+    あなた: <%= current_user.name || "名無し" %> | 
+    相手: <%= @partner.name || "名無し" %>
+  </div>
+
   <!-- 検索欄（仮） -->
   <div class="flex items-center space-x-2">
     <input type="text" placeholder="投稿の検索" class="flex-1 border rounded-lg px-3 py-2 text-sm" />
@@ -14,12 +19,71 @@
     <% end %>
   </div>
 
-  <!-- 投稿一覧（まだ仮） -->
+  <!-- 投稿一覧 -->
   <div id="posts-list" class="space-y-4">
-    <!-- 投稿カード(仮) -->
-    <div class="bg-gray-100 rounded-lg p-4 text-gray-500 text-sm">
-      投稿がまだありません
-    </div>
+    <% if @posts.any? %> <!-- 1件以上あるか？ -->
+      <% @posts.each do |post| %> <!-- ループ表示 -->
+        <!-- 優先度による背景色分岐 -->
+        <% bg_class =
+          case post.sense_level
+          when "high" then "bg-red-200"
+          when "medium" then "bg-yellow-200"
+          when "low" then "bg-green-200"
+          else "bg-gray-100"
+          end %>
+
+        <div class="<%= bg_class %> flex rounded-lg shadow p-4 h-32 mb-4">
+          <!-- 左側: カテゴリアイコン・優先度 -->
+          <div class="flex-shrink-0 mr-4 flex flex-col items-center justify-center w-16 space-y-2">
+            <% if post.category&.icon.present? %>
+              <%= image_tag(post.category.icon, alt: post.category.name, class: "w-8 h-8") %>
+            <% end %>
+            <div class="text-center text-xs text-gray-400 ">
+              <span>優先度: <%= post.sense_level_jp %></span>
+            </div>
+          </div>
+
+          <!-- 右側: 投稿内容 -->
+          <div class="flex flex-col flex-grow h-full">
+            <!-- 上: カテゴリ名 -->
+            <p class="text-sm text-gray-500 mb-1">カテゴリ: <%= post.category.name %></p>
+
+            <!-- 上: タイトル・分岐設定 -->
+            <h3 class="text-lg font-semibold mb-2 <%= 'text-blue-600' if post.user != current_user && Time.current < post.reveal_at %>">
+              <% if post.user == current_user %>
+                <%= post.title %>
+              <% else %>
+                <% if Time.current < post.reveal_at %>
+                  <%= post.category.hint_text %>
+                <% else %>
+                  <%= post.title %>
+                <% end %>
+              <% end %>
+            </h3>
+            <!-- 上: 残り時間_残り1時間で赤字 -->
+            <div class="mt-auto text-xs space-x-2">
+              <% hours_left = ((post.reveal_at - Time.current) / 1.hour).ceil %>
+              <span class="<%= 'text-red-500 font-semibold' if hours_left <= 1 %>">
+                答え合わせまであと <%= hours_left %>時間！
+              </span>
+            </div>
+
+            <!-- 下: 投稿者・投稿時間・残り時間 -->
+            <div class="flex items-center justify-end mt-auto text-xs text-gray-400 space-x-2">
+              <% if post.user.icon.present? %>
+                <%= image_tag(post.user.icon, alt: post.user.name, class: "w-6 h-6 rounded-full") %>
+              <% end %>
+              <span><%= post.user.name %></span>
+              <span><%= post.reveal_at.strftime("%Y/%m/%d %H:%M") %></span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="bg-gray-100 rounded-lg p-4 text-gray-500 text-sm">
+        投稿がまだありません
+      </div>
+    <% end %>
   </div>
 
 </div>

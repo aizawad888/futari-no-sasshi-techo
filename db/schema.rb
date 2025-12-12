@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_10_224045) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_12_060331) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,30 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_10_224045) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
+  end
+
+  create_table "pairs", force: :cascade do |t|
+    t.bigint "user_id1", null: false
+    t.bigint "user_id2", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id1", "user_id2"], name: "index_pairs_on_user_id1_and_user_id2", unique: true
+    t.index ["user_id1"], name: "index_pairs_on_user_id1"
+    t.index ["user_id2"], name: "index_pairs_on_user_id2"
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "pair_id", null: false
+    t.bigint "category_id", null: false
+    t.string "title"
+    t.datetime "reveal_at"
+    t.integer "sense_level"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_posts_on_category_id"
+    t.index ["pair_id"], name: "index_posts_on_pair_id"
+    t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -40,4 +64,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_10_224045) do
     t.index ["my_code"], name: "index_users_on_my_code", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
+
+  add_foreign_key "pairs", "users", column: "user_id1"
+  add_foreign_key "pairs", "users", column: "user_id2"
+  add_foreign_key "posts", "categories"
+  add_foreign_key "posts", "pairs"
+  add_foreign_key "posts", "users"
 end
