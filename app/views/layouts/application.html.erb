@@ -21,6 +21,14 @@
     <% unless controller_name == 'sessions' && action_name == 'new' %>
       <%= render "shared/header" %>
     <% end %>
-    <%= yield %>
+
+    <main>
+      <%= yield %>
+    </main>
+
+    <% unless controller_path.start_with?("devise/") %>
+      <%= render "shared/footer" %>
+    <% end %>
+
   </body>
 </html>
