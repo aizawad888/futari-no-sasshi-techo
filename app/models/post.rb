@@ -20,4 +20,13 @@ class Post < ApplicationRecord
     when "high" then "高"
     end
   end
+
+  # select用に引数付きメソッド
+  def self.sense_level_jp_for(key)
+    case key
+    when "low" then "低"
+    when "medium" then "中"
+    when "high" then "高"
+    end
+  end
 end

@@ -1,5 +1,5 @@
 <% content_for(:page_title, t('post.new')) %>
-<% content_for(:show_back_button, false) %>
+<% content_for(:show_back_button, true) %>
 
 
 <% if @post.errors.any? %>
@@ -25,12 +25,12 @@
 
   <div>
     <%= f.label :sense_level, "優先度" %><br>
-    <%= f.select :sense_level, Post.sense_levels.keys %>
+    <%= f.select :sense_level, Post.sense_levels.keys.map { |k| [Post.sense_level_jp_for(k), k] } %>
   </div>
 
   <div>
-    <%= f.label :reveal_at, "公開時間" %><br>
-    <%= f.datetime_select :reveal_at, minute_step: 60, discard_minute: true, required: true %>
+    <%= f.label :reveal_at, "答え合わせ日時" %><br>
+    <%= f.datetime_select :reveal_at, discard_minute: true, required: true %>
   </div>
 
   <%= f.submit "投稿する" %>
