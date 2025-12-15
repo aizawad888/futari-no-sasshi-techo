@@ -55,16 +55,9 @@
 
               <!-- 上: タイトル・分岐設定 -->
               <h3 class="text-lg font-semibold mb-2 <%= 'text-blue-600' if post.user != current_user && Time.current < post.reveal_at %>">
-                <% if post.user == current_user %>
-                  <%= post.title %>
-                <% else %>
-                  <% if Time.current < post.reveal_at %>
-                    <%= post.category.hint_text %>
-                  <% else %>
-                    <%= post.title %>
-                  <% end %>
-                <% end %>
+                <%= post.title_for_view(current_user) %>
               </h3>
+
               <!-- 上: 残り時間_残り1時間で赤字、答えが公開されてない場合のみ -->
               <% if post.reveal_at.present? && Time.current.in_time_zone < post.reveal_at.in_time_zone %>
                 <div class="mt-auto text-xs space-x-2">

@@ -29,4 +29,12 @@ class Post < ApplicationRecord
     when "high" then "高"
     end
   end
+
+  def title_for_view(viewer)
+    if user == viewer
+      title
+    else
+      Time.current < reveal_at ? category.hint_text : title
+    end
+  end
 end

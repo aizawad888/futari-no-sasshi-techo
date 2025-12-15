@@ -1,8 +1,13 @@
-<% content_for(:page_title, @post.title)  %>
+<% content_for(:page_title, @post.title_for_view(current_user)) %>
 <% content_for(:show_back_button, true) %>
+<% content_for(:back_path, main_path) %>
 
 
-<h2><%= @post.title %></h2>
+<!-- タイトル（答え合わせ時間での表示制御済み） -->
+<h2><%= @post.title_for_view(current_user) %></h2>
+
+
+
 <p>カテゴリ: <%= @post.category.name %></p>
 <p>優先度: <%= @post.sense_level_jp %></p>
 <p>投稿者: 
