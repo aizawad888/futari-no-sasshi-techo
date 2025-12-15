@@ -3,6 +3,7 @@ class Post < ApplicationRecord
   belongs_to :pair, optional: true
   belongs_to :category
 
+  validates :title, presence: true
   validates :reveal_at, presence: true
 
 

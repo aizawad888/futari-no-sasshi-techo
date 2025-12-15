@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_15_052128) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_15_063649) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -27,6 +27,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_15_052128) do
     t.bigint "user_id2", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "active", default: true, null: false
     t.index ["user_id1", "user_id2"], name: "index_pairs_on_user_id1_and_user_id2", unique: true
     t.index ["user_id1"], name: "index_pairs_on_user_id1"
     t.index ["user_id2"], name: "index_pairs_on_user_id2"
