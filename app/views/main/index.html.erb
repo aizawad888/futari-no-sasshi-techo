@@ -61,7 +61,7 @@
               <% end %>
             </h3>
             <!-- 上: 残り時間_残り1時間で赤字、答えが公開されてない場合のみ -->
-            <% if Time.current < post.reveal_at %>
+            <% if post.reveal_at.present? && Time.current < post.reveal_at %>
               <div class="mt-auto text-xs space-x-2">
                 <% hours_left = ((post.reveal_at - Time.current) / 1.hour).ceil %>
                 <span class="<%= 'text-red-500 font-semibold' if hours_left <= 1 %>">
@@ -69,6 +69,7 @@
                 </span>
               </div>
             <% end %>
+
 
             <!-- 下: 投稿者・投稿時間・残り時間 -->
             <div class="flex items-center justify-end mt-auto text-xs text-gray-400 space-x-2">
@@ -91,10 +92,10 @@
 </div>
 
 <!-- 右下の追加ボタン -->
-<button
-  class="fixed bottom-20 right-6 w-14 h-14 bg-pink-300 text-white rounded-full shadow-lg flex items-center justify-center text-3xl">
+<%= link_to new_post_path,
+  class: "fixed bottom-20 right-6 w-14 h-14 bg-pink-300 text-white rounded-full shadow-lg flex items-center justify-center text-3xl" do %>
   +
-</button>
+<% end %>
 
 
 

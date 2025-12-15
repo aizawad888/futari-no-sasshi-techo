@@ -4,6 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  belongs_to :pair, optional: true
+  has_many :posts
   before_create :generate_my_code
 
   validates :email, presence: true, uniqueness: { case_sensitive: false }
