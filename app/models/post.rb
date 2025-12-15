@@ -1,7 +1,11 @@
 class Post < ApplicationRecord
   belongs_to :user
-  belongs_to :pair
+  belongs_to :pair, optional: true
   belongs_to :category
+
+  validates :title, presence: true
+  validates :reveal_at, presence: true
+
 
   enum sense_level: {
     low: 0,

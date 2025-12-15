@@ -4,10 +4,14 @@
 
 <div class="max-w-md mx-auto px-4 py-4 space-y-4">
 
-  <div>
-    あなた: <%= current_user.name || "名無し" %> | 
-    相手: <%= @partner.name || "名無し" %>
-  </div>
+  <% if @partner.nil? %>
+    <p>まだペアが設定されていません。</p>
+  <% else %>
+    <div>
+      あなた: <%= current_user.name || "名無し" %> | 
+      相手: <%= @partner.name || "名無し" %>
+    </div>
+  <% end %>
 
   <!-- 検索欄（仮） -->
   <div class="flex items-center space-x-2">
@@ -60,13 +64,17 @@
                 <% end %>
               <% end %>
             </h3>
-            <!-- 上: 残り時間_残り1時間で赤字 -->
-            <div class="mt-auto text-xs space-x-2">
-              <% hours_left = ((post.reveal_at - Time.current) / 1.hour).ceil %>
-              <span class="<%= 'text-red-500 font-semibold' if hours_left <= 1 %>">
-                答え合わせまであと <%= hours_left %>時間！
-              </span>
-            </div>
+            <!-- 上: 残り時間_残り1時間で赤字、答えが公開されてない場合のみ -->
+            <% if post.reveal_at.present? && Time.current.in_time_zone < post.reveal_at.in_time_zone %>
+              <div class="mt-auto text-xs space-x-2">
+                <% hours_left = ((post.reveal_at.in_time_zone - Time.current.in_time_zone) / 1.hour).ceil %>
+                <span class="<%= 'text-red-500 font-semibold' if hours_left <= 1 %>">
+                  答え合わせまであと <%= hours_left %>時間！
+                </span>
+              </div>
+            <% end %>
+
+
 
             <!-- 下: 投稿者・投稿時間・残り時間 -->
             <div class="flex items-center justify-end mt-auto text-xs text-gray-400 space-x-2">
@@ -74,7 +82,7 @@
                 <%= image_tag(post.user.icon, alt: post.user.name, class: "w-6 h-6 rounded-full") %>
               <% end %>
               <span><%= post.user.name %></span>
-              <span><%= post.reveal_at.strftime("%Y/%m/%d %H:%M") %></span>
+              <span><%= post.created_at.in_time_zone.strftime("%Y/%m/%d %H:%M") %></span>
             </div>
           </div>
         </div>
@@ -89,10 +97,10 @@
 </div>
 
 <!-- 右下の追加ボタン -->
-<button
-  class="fixed bottom-20 right-6 w-14 h-14 bg-pink-300 text-white rounded-full shadow-lg flex items-center justify-center text-3xl">
+<%= link_to new_post_path,
+  class: "fixed bottom-20 right-6 w-14 h-14 bg-pink-300 text-white rounded-full shadow-lg flex items-center justify-center text-3xl" do %>
   +
-</button>
+<% end %>
 
 
 

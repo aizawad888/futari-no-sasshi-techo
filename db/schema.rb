@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_12_060331) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_15_063649) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -27,6 +27,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_060331) do
     t.bigint "user_id2", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "active", default: true, null: false
     t.index ["user_id1", "user_id2"], name: "index_pairs_on_user_id1_and_user_id2", unique: true
     t.index ["user_id1"], name: "index_pairs_on_user_id1"
     t.index ["user_id2"], name: "index_pairs_on_user_id2"
@@ -34,10 +35,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_12_060331) do
 
   create_table "posts", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "pair_id", null: false
+    t.bigint "pair_id"
     t.bigint "category_id", null: false
     t.string "title"
-    t.datetime "reveal_at"
+    t.datetime "reveal_at", null: false
     t.integer "sense_level"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

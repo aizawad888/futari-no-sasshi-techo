@@ -31,4 +31,6 @@ ja:
     sign_up: "新規登録"
   main:
     index: "メインページ"
+  post:
+    new: "新規投稿"
 

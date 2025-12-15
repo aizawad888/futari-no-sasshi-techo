@@ -1,8 +1,19 @@
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  # Devise
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+
+  # 投稿
+  has_many :posts, dependent: :destroy
+
+  # ペア
+  has_many :pairs_as_user1, class_name: "Pair", foreign_key: :user_id1, dependent: :nullify
+  has_many :pairs_as_user2, class_name: "Pair", foreign_key: :user_id2, dependent: :nullify
+
+  # 自分の有効なペアを返す
+  def active_pair
+    (pairs_as_user1 + pairs_as_user2).find(&:active)
+  end
 
   before_create :generate_my_code
 
