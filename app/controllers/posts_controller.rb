@@ -5,8 +5,7 @@ class PostsController < ApplicationController
 
   def create
     @post = current_user.posts.build(post_params)
-    @post.pair = current_user.pair
-
+    @post.pair = Pair.find_by("user_id1 = ? OR user_id2 = ?", current_user.id, current_user.id)
     if @post.save
       redirect_to main_path
     else

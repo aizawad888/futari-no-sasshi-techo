@@ -65,14 +65,15 @@
               <% end %>
             </h3>
             <!-- 上: 残り時間_残り1時間で赤字、答えが公開されてない場合のみ -->
-            <% if post.reveal_at.present? && Time.current < post.reveal_at %>
+            <% if post.reveal_at.present? && Time.current.in_time_zone < post.reveal_at.in_time_zone %>
               <div class="mt-auto text-xs space-x-2">
-                <% hours_left = ((post.reveal_at - Time.current) / 1.hour).ceil %>
+                <% hours_left = ((post.reveal_at.in_time_zone - Time.current.in_time_zone) / 1.hour).ceil %>
                 <span class="<%= 'text-red-500 font-semibold' if hours_left <= 1 %>">
                   答え合わせまであと <%= hours_left %>時間！
                 </span>
               </div>
             <% end %>
+
 
 
             <!-- 下: 投稿者・投稿時間・残り時間 -->
@@ -81,7 +82,7 @@
                 <%= image_tag(post.user.icon, alt: post.user.name, class: "w-6 h-6 rounded-full") %>
               <% end %>
               <span><%= post.user.name %></span>
-              <span><%= post.reveal_at.strftime("%Y/%m/%d %H:%M") %></span>
+              <span><%= post.created_at.in_time_zone.strftime("%Y/%m/%d %H:%M") %></span>
             </div>
           </div>
         </div>
