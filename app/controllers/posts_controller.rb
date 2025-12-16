@@ -8,9 +8,18 @@ class PostsController < ApplicationController
 
   def create
     @post = current_user.posts.build(post_params)
-    @post.pair = Pair.find_by("user_id1 = ? OR user_id2 = ?", current_user.id, current_user.id)
+
+    # 現在アクティブなペアを取得
+    active_pair = current_user.active_pair
+    if active_pair.nil?
+      flash.now[:alert] = "ペアがいないと投稿できません"
+      render :new and return
+    end
+
+    @post.pair = active_pair
+
     if @post.save
-      redirect_to main_path
+      redirect_to main_path, notice: "投稿しました"
     else
       render :new
     end
@@ -27,7 +36,7 @@ class PostsController < ApplicationController
   def update
     @post = Post.find(params[:id])
     if @post.update(post_params)
-      redirect_to @post
+      redirect_to @post, notice: "更新しました"
     else
       render :edit
     end
@@ -45,10 +54,8 @@ class PostsController < ApplicationController
   def authorize_post!
     return if @post.user == current_user
 
-    redirect_to main_path, alert: "権限がありません"
+    redirect_to main_path, alert: "権限がありません" unless @post.user == current_user
   end
-
-  private
 
   def post_params
     params.require(:post).permit(

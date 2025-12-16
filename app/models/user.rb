@@ -15,17 +15,19 @@ class User < ApplicationRecord
     (pairs_as_user1 + pairs_as_user2).find(&:active)
   end
 
-  before_create :generate_my_code
-
   validates :email, presence: true, uniqueness: { case_sensitive: false }
 
-  private
+  # ペアコードが空欄な場合の自動発行
+  def ensure_my_code
+    generate_my_code if my_code.blank?
+    save! if changed?
+  end
 
   def generate_my_code
-    # SecureRandom.hex(4) → 8文字のランダム文字列
     self.my_code = loop do
       code = SecureRandom.hex(4)
       break code unless User.exists?(my_code: code)
     end
+    save!
   end
 end
