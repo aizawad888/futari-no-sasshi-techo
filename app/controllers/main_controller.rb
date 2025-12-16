@@ -16,7 +16,6 @@ class MainController < ApplicationController
     @partner = @pair.user1 == current_user ? @pair.user2 : @pair.user1
 
     # 自分と相手の投稿をまとめて取得（最新順）
-    @posts = Post.where(user: [ current_user, @partner ])
-                 .order(created_at: :desc)
+    @posts = @pair.posts.order(created_at: :desc).includes(:category, :user)
   end
 end

@@ -25,6 +25,7 @@ ja:
         resend_confirmation: "確認メールを再送"
         resend_unlock: "ロック解除メールを再送"
         sign_in_with: "%{provider}でサインイン"
+    show: "マイページ"
   header:
     login: "ログイン"
     logout: "ログアウト"
@@ -34,4 +35,6 @@ ja:
   post:
     new: "新規投稿"
     edit: "編集"
+  pair:
+    new: "ペア作成"
 

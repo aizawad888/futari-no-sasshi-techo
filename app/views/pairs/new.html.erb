@@ -1,0 +1,20 @@
+<% content_for(:page_title, t('pair.new')) %>
+<% content_for(:show_back_button, true) %>
+<% content_for(:back_path, main_path) %>
+
+
+<h2>新しいペアを作成</h2>
+
+<%= form_with model: @pair, local: true do |f| %>
+  <div>
+    <%= f.label :partner_code, "相手のペアコード" %>
+    <%= f.text_field :partner_code, placeholder: "8桁のコードを入力" %>
+  </div>
+
+  <div>
+    <%= f.submit "ペア作成", class: "px-4 py-2 bg-pink-300 text-white rounded-lg" %>
+  </div>
+<% end %>
+
+<%= link_to "マイページに戻る", user_path(current_user) %>
+
