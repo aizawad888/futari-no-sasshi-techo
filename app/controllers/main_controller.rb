@@ -1,4 +1,6 @@
 class MainController < ApplicationController
+  before_action :authenticate_user!
+
   def index
     # ログイン中ユーザーの「有効ペア」を取得
     @pair = Pair.where(active: true)

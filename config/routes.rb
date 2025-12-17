@@ -19,6 +19,6 @@ Rails.application.routes.draw do
   end
 
   resources :pairs, only: [ :new, :create, :destroy ]
-
   resources :posts, only: [ :new, :create, :show, :edit, :update, :destroy ]
+  resources :post_memos, only: [ :create, :update ]
 end
