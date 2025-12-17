@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_12_15_063649) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_17_040641) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -31,6 +31,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_15_063649) do
     t.index ["user_id1", "user_id2"], name: "index_pairs_on_user_id1_and_user_id2", unique: true
     t.index ["user_id1"], name: "index_pairs_on_user_id1"
     t.index ["user_id2"], name: "index_pairs_on_user_id2"
+  end
+
+  create_table "post_memos", force: :cascade do |t|
+    t.bigint "post_id", null: false
+    t.bigint "user_id", null: false
+    t.text "memo"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_post_memos_on_post_id"
+    t.index ["user_id"], name: "index_post_memos_on_user_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -68,6 +78,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_12_15_063649) do
 
   add_foreign_key "pairs", "users", column: "user_id1"
   add_foreign_key "pairs", "users", column: "user_id2"
+  add_foreign_key "post_memos", "posts"
+  add_foreign_key "post_memos", "users"
   add_foreign_key "posts", "categories"
   add_foreign_key "posts", "pairs"
   add_foreign_key "posts", "users"

@@ -5,6 +5,9 @@ class User < ApplicationRecord
 
   # 投稿
   has_many :posts, dependent: :destroy
+  
+  # メモ
+  has_many :post_memos, dependent: :destroy
 
   # ペア
   has_many :pairs_as_user1, class_name: "Pair", foreign_key: :user_id1, dependent: :nullify

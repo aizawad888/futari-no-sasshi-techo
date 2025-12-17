@@ -48,3 +48,12 @@
   🗑️ 削除
   <% end %>
 <% end %>
+
+
+<h2>自分用メモ</h2>
+
+<%= form_with model: @post_memo, local: true do |f| %>
+  <%= f.hidden_field :post_id, value: @post.id %>
+  <%= f.text_area :memo, rows: 5 %>
+  <%= f.submit "保存" %>
+<% end %>

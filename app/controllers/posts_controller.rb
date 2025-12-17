@@ -27,6 +27,10 @@ class PostsController < ApplicationController
 
   def show
     @post = Post.find(params[:id])
+    # メモを表示
+    @post_memo = @post.post_memos.find_by(user: current_user)
+    # メモがなければ表示用に新規作成
+    @post_memo ||= @post.post_memos.build(user: current_user)
   end
 
   def edit
