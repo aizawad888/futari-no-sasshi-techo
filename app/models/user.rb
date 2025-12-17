@@ -5,7 +5,7 @@ class User < ApplicationRecord
 
   # 投稿
   has_many :posts, dependent: :destroy
-  
+
   # メモ
   has_many :post_memos, dependent: :destroy
 
