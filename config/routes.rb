@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "notifications/index"
   devise_for :users, controllers: {
     registrations: "users/registrations"
   }
@@ -19,4 +20,8 @@ Rails.application.routes.draw do
   resources :pairs, only: [ :new, :create, :destroy ]
   resources :posts, only: [ :new, :create, :show, :edit, :update, :destroy ]
   resources :post_memos, only: [ :create, :update ]
+
+  resources :notifications, only: [ :index ] do
+    patch :mark_as_read, on: :member
+  end
 end

@@ -44,4 +44,7 @@ ja:
     edit: "編集"
   pair:
     new: "ペア作成"
+  notifications:
+    index: "通知一覧"
+
 

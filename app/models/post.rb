@@ -3,6 +3,9 @@ class Post < ApplicationRecord
   belongs_to :pair, optional: true
   belongs_to :category
   has_many :post_memos, dependent: :destroy
+  has_many :notifications, as: :notifiable, dependent: :destroy
+
+  after_create :notify_partner_of_new_post
 
   validates :title, presence: true
   validates :reveal_at, presence: true
@@ -37,5 +40,44 @@ class Post < ApplicationRecord
     else
       Time.current < reveal_at ? category.hint_text : title
     end
+  end
+
+  def just_unlocked?(last_viewed_at)
+    reveal_at.present? &&
+      last_viewed_at.present? &&
+      reveal_at > last_viewed_at &&
+      reveal_at <= Time.current
+  end
+
+  # unlock_at が過ぎて初めて index を見たときだけ通知を作る
+  def create_post_unlocked_notification!
+    # ペアを取得
+    pair = Pair.find_by("user_id1 = ? OR user_id2 = ?", user.id, user.id)
+    return unless pair
+
+    # 相手ユーザーを決定
+    partner = pair.user1 == user ? pair.user2 : pair.user1
+    return unless partner
+
+    # すでに同じ通知がある場合は作らない
+    return if notifications.exists?(notification_kind: "post_unlocked", user: partner)
+
+    # 通知作成
+    partner.notifications.create!(
+      notification_kind: "post_unlocked",
+      notifiable: self
+    )
+  end
+
+  private
+
+  def notify_partner_of_new_post
+    partner = user.active_pair&.user1 == user ? user.active_pair.user2 : user.active_pair.user1
+    return unless partner
+
+    partner.notifications.create!(
+      notification_kind: "new_post",
+      notifiable: self
+    )
   end
 end
