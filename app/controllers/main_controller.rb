@@ -23,5 +23,24 @@ class MainController < ApplicationController
 
     # 自分と相手の投稿をまとめて取得（最新順）
     @posts = @pair.posts.order(created_at: :desc).includes(:category, :user)
+
+    # 優先度の高い投稿を取得
+    @high_posts = @pair.posts
+                   .where(sense_level: :high)
+                   .where("created_at >= ?", 3.days.ago)
+                   .order(created_at: :desc)
+                   .limit(3)
+
+    @other_posts = @pair.posts
+                        .where.not(sense_level: :high)
+                        .order(created_at: :desc)
+
+    @posts.each do |post|
+      if post.just_unlocked?(@last_viewed_at)
+        post.create_post_unlocked_notification!
+      end
+    end
   end
+
+
 end

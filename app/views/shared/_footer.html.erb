@@ -11,12 +11,19 @@
 
 
     <!-- 通知 -->
-    <%= link_to "#", class: "flex flex-col items-center" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
-      </svg>
-      <span>通知</span>
-    <% end %>
+    <div class="relative">
+      <%= link_to notifications_index_path, class: "flex flex-col items-center" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+        </svg>
+        <span>通知</span>
+      <% end %>
+
+      <% if current_user.notifications.where(read_at: nil).exists? %>
+        <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+      <% end %>
+    </div>
+
 
 
     <!-- 伝言板 -->
@@ -41,7 +48,7 @@
       <% if current_user.icon.present? %>
         <%= image_tag("user_icons/#{current_user.icon}", alt: current_user.name, class: "w-6 h-6 rounded-full") %>
       <% end %>
-      <span>マイページ</span>
+      <span><%= current_user.name || current_user.email %></span>
     <% end %>
 
   </nav>

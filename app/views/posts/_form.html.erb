@@ -25,9 +25,23 @@
   </div>
 
   <div>
-    <%= f.label :reveal_at, "答え合わせ日時" %><br>
-    <%= f.datetime_select :reveal_at, discard_minute: true, required: true %>
-  </div>
+  <%= f.label :reveal_at, "答え合わせのタイミング" %><br>
+  <% options = [
+    ["選択してください", nil],
+    ["すぐ公開", 0],
+    ["10分後", 10.minutes],
+    ["30分後", 30.minutes],
+    ["1時間後", 1.hour],
+    ["2時間後", 2.hours],
+    ["3時間後", 3.hours],
+    ["6時間後", 6.hours],
+    ["12時間後", 12.hours],
+    ["24時間後", 24.hours],
+    ["2日後", 2.days]
+  ] %>
+  <%= f.select :reveal_offset, options_for_select(options.map { |label, offset| [label, offset] }, selected: nil) %>
+</div>
+
 
   <%= f.submit %>
 

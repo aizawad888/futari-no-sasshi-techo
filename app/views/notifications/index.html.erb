@@ -1,0 +1,35 @@
+<% @notifications.each do |notification| %>
+  <div class="notification">
+    <%= button_to mark_as_read_notification_path(notification), method: :patch, class: "notification-button" do %>
+
+      <%# 未読マーク ● %>
+      <% if notification.read_at.nil? %>
+        <span class="text-xs text-blue-500 mr-1">●</span>
+      <% end %>
+
+      <%# メッセージ %>
+      <span>
+        <% case notification.notification_kind %>
+        <% when 'new_post' %>
+          📝 新しい投稿があります
+          <% if notification.notifiable.is_a?(Post) %>
+            : <%= notification.notifiable.title_for_view(current_user) %>
+          <% end %>
+        <% when 'post_unlocked' %>
+          🔓 答えが公開されました
+          <% if notification.notifiable.is_a?(Post) %>
+            : <%= notification.notifiable.title_for_view(current_user) %>
+          <% end %>
+        <% when 'anniversary' %>
+          🎉 記念日です
+        <% when 'weekly_summary' %>
+          📊 週間サマリーが公開されました
+        <% end %>
+      </span>
+
+      <%# 作成時間 %>
+      <small class="ml-1"><%= time_ago_in_words(notification.created_at) %>前</small>
+
+    <% end %>
+  </div>
+<% end %>

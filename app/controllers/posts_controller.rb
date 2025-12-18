@@ -18,6 +18,11 @@ class PostsController < ApplicationController
 
     @post.pair = active_pair
 
+    # reveal_offset が選択されていれば reveal_at に変換
+    if params[:post][:reveal_offset].present?
+      @post.reveal_at = Time.current + params[:post][:reveal_offset].to_i.seconds
+    end
+
     if @post.save
       redirect_to main_path, notice: "投稿しました"
     else
