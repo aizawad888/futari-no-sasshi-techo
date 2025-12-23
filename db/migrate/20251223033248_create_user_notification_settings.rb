@@ -10,7 +10,7 @@ class CreateUserNotificationSettings < ActiveRecord::Migration[7.0]
     end
 
     add_index :user_notification_settings,
-              [:user_id, :notification_kind],
+              [ :user_id, :notification_kind ],
               unique: true,
               name: "index_user_notification_settings_unique"
   end

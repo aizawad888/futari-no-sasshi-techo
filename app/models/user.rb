@@ -80,7 +80,7 @@ class User < ApplicationRecord
     { success: true }
   end
 
-# 通知設定を初期化（初回ログイン時などに実行）
+  # 通知設定を初期化（初回ログイン時などに実行）
   def initialize_notification_settings!
     UserNotificationSetting::NOTIFICATION_KINDS.each do |kind|
       user_notification_settings.find_or_create_by!(notification_kind: kind) do |setting|

@@ -27,6 +27,5 @@ Rails.application.routes.draw do
     patch :mark_as_read, on: :member
   end
 
-  resource :notification_settings, only: [:show, :update]
-
+  resource :notification_settings, only: [ :show, :update ]
 end

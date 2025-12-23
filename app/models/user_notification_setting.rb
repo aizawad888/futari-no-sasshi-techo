@@ -6,21 +6,21 @@ class UserNotificationSetting < ApplicationRecord
 
   # 各通知種別のデフォルト頻度
   DEFAULT_FREQUENCIES = {
-    'new_post' => 'immediate',      # デフォルトはすぐ通知
-    'post_unlocked' => 'immediate', # 固定：すぐ通知
-    'anniversary' => 'immediate',   # 固定：すぐ通知
-    'weekly_summary' => 'weekly'    # 固定：週1回
+    "new_post" => "immediate",      # デフォルトはすぐ通知
+    "post_unlocked" => "immediate", # 固定：すぐ通知
+    "anniversary" => "immediate",   # 固定：すぐ通知
+    "weekly_summary" => "weekly"    # 固定：週1回
   }.freeze
 
   # 頻度を変更可能な通知種別
-  FREQUENCY_CHANGEABLE_KINDS = ['new_post'].freeze
+  FREQUENCY_CHANGEABLE_KINDS = [ "new_post" ].freeze
 
-  validates :notification_kind, presence: true, 
+  validates :notification_kind, presence: true,
             inclusion: { in: NOTIFICATION_KINDS }
   validates :user_id, uniqueness: { scope: :notification_kind }
-  validates :frequency, inclusion: { 
-    in: ['immediate', 'daily', 'weekly', nil],
-    allow_nil: true 
+  validates :frequency, inclusion: {
+    in: [ "immediate", "daily", "weekly", nil ],
+    allow_nil: true
   }
 
   # 頻度が変更可能かどうか
@@ -31,7 +31,7 @@ class UserNotificationSetting < ApplicationRecord
   # 実際に使用する頻度を返す
   def effective_frequency
     return nil unless push_enabled
-    
+
     if frequency_changeable?
       frequency || DEFAULT_FREQUENCIES[notification_kind]
     else
