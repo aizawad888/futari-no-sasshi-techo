@@ -48,6 +48,9 @@ ja:
     index: "通知一覧"
   notification_settings:
     show: "プッシュ通知設定"
+    update:
+      success: "通知設定を保存しました"
+      failure: "通知設定の保存に失敗しました"
   notification_kinds:
     new_post: "相手の投稿通知"
     post_unlocked: "答え合わせ通知"
