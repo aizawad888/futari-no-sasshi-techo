@@ -1,46 +1,43 @@
 class UserNotificationSetting < ApplicationRecord
   belongs_to :user
 
-  # 通知の種類（enumは使わない）
+  # 通知の種類
   NOTIFICATION_KINDS = %w[new_post post_unlocked anniversary weekly_summary].freeze
 
-  # 各通知種別のデフォルト頻度
-  DEFAULT_FREQUENCIES = {
-    "new_post" => "immediate",      # デフォルトはすぐ通知
-    "post_unlocked" => "immediate", # 固定：すぐ通知
-    "anniversary" => "immediate",   # 固定：すぐ通知
-    "weekly_summary" => "weekly"    # 固定：週1回
+  # 各通知種別で許可される頻度
+  FREQUENCY_OPTIONS = {
+    "new_post" => %w[immediate daily],
+    "post_unlocked" => %w[immediate],
+    "anniversary" => %w[immediate],
+    "weekly_summary" => %w[weekly]
   }.freeze
 
-  # 頻度を変更可能な通知種別
-  FREQUENCY_CHANGEABLE_KINDS = [ "new_post" ].freeze
+  # デフォルト頻度
+  DEFAULT_FREQUENCIES = {
+    "new_post" => "immediate",
+    "post_unlocked" => "immediate",
+    "anniversary" => "immediate",
+    "weekly_summary" => "weekly"
+  }.freeze
 
-  validates :notification_kind, presence: true,
-            inclusion: { in: NOTIFICATION_KINDS }
-  validates :user_id, uniqueness: { scope: :notification_kind }
-  validates :frequency, inclusion: {
-    in: [ "immediate", "daily", "weekly", nil ],
-    allow_nil: true
-  }
+  validates :notification_kind,
+            presence: true,
+            inclusion: { in: NOTIFICATION_KINDS },
+            uniqueness: { scope: :user_id }
 
-  # 頻度が変更可能かどうか
+  validates :frequency,
+            presence: true,
+            inclusion: { in: ->(r) { FREQUENCY_OPTIONS[r.notification_kind] } }
+
+  validates :push_enabled, inclusion: { in: [true, false], message: "must be true or false" }
+
+  # new_post だけ頻度変更可能
   def frequency_changeable?
-    FREQUENCY_CHANGEABLE_KINDS.include?(notification_kind)
+    notification_kind == "new_post"
   end
 
-  # 実際に使用する頻度を返す
-  def effective_frequency
-    return nil unless push_enabled
-
-    if frequency_changeable?
-      frequency || DEFAULT_FREQUENCIES[notification_kind]
-    else
-      DEFAULT_FREQUENCIES[notification_kind]
-    end
-  end
-
-  # 通知を送信すべきかどうか
+  # 通知を送信すべきか
   def should_notify?
-    push_enabled && effective_frequency.present?
+    push_enabled?
   end
 end
