@@ -114,5 +114,6 @@ Rails.application.configure do
     enable_starttls_auto: true
   }
 
-  config.action_mailer.default_url_options = { host: "yourdomain.com", protocol: "https" }
+  config.action_mailer.default_url_options = { host: "futari-no-kikkake-cho.onrender.com" }
+  config.mailer_sender = 'ふたりの察し手帳 <futari.no.sasshi.techo@gmail.com>'
 end
