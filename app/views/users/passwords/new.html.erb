@@ -29,7 +29,10 @@
 
     <p class="text-sm text-wood-dark text-center">
       登録しているメールアドレスを入力してください。<br>
-      再設定用のリンクをメールでお送りします。
+      再設定用のリンクをメールでお送りします。<br>
+      <br>
+      ※現在、パスワードリセット機能は試験運用中です。<br>
+      メールが届かない場合は、お問い合わせください。
     </p>
 
     <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, data: { turbo: false } }) do |f| %>
