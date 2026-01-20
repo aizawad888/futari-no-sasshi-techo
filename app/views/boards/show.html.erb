@@ -1,0 +1,30 @@
+<h1>伝言板</h1>
+
+<!-- 上：共有メモ -->
+<section class="mb-8">
+  <h2>共有メモ</h2>
+  <div class="border p-4 rounded">
+    <%= simple_format(@board.content.presence || "まだメモはありません") %>
+  </div>
+</section>
+
+<hr>
+
+<!-- 下：記念日 -->
+<section class="mt-8">
+  <h2>記念日</h2>
+
+  <% if @anniversaries.any? %>
+    <ul>
+      <% @anniversaries.each do |anniversary| %>
+        <li>
+          <strong><%= anniversary.title %></strong>
+          ：<%= anniversary.date %>
+          （<%= anniversary.repeat_type %>）
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>まだ記念日は登録されていません</p>
+  <% end %>
+</section>
