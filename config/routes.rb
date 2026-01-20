@@ -49,7 +49,7 @@ Rails.application.routes.draw do
   end
 
 
-  resources :anniversaries, only: [:index, :new, :create]
-  resource :board, only: [:show, :update]
+  resources :anniversaries, only: [ :index, :new, :create, :show, :edit, :update, :destroy ]
 
+  resource :board, only: [ :show, :update ]
 end
