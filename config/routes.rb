@@ -62,4 +62,10 @@ Rails.application.routes.draw do
 
   # ルールブック
   resources :rule_items, only: [ :index, :new, :create, :edit, :update, :destroy ]
+
+  # 静的ページ
+  get "about",   to: "pages#about"
+  get "contact", to: "pages#contact"
+  get "terms",   to: "pages#terms"
+  get "privacy", to: "pages#privacy"
 end
