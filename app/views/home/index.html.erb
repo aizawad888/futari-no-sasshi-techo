@@ -213,9 +213,13 @@
 <footer class="bg-forest-green py-8">
   <div class="max-w-5xl mx-auto px-4 text-center space-y-4">
     <!-- privacy policy -->
-    <a href="#" class="text-wood-light text-sm hover:underline">
-      プライバシーポリシー
-    </a>
+    <%= link_to "運営元", about_path, class:"text-wood-light text-sm hover:underline" %>
+     / 
+    <%= link_to "お問い合わせ", contact_path, class:"text-wood-light text-sm hover:underline" %>
+     / 
+    <%= link_to "利用規約", terms_path, class:"text-wood-light text-sm hover:underline" %>
+     / 
+    <%= link_to "プライバシーポリシー", privacy_path, class:"text-wood-light text-sm hover:underline" %>
 
     <!-- copyright -->
     <p class="text-wood-light text-xs">
