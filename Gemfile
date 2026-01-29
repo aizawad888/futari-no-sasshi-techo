@@ -70,3 +70,5 @@ group :development do
 end
 
 gem "resend"
+
+gem "kaminari"

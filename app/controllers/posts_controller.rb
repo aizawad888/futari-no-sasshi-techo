@@ -77,4 +77,13 @@ class PostsController < ApplicationController
       :reveal_offset_seconds
     )
   end
+
+  # アーカイブ・復元切替
+  def toggle_archive
+    post = Post.find(params[:id])
+    post.update!(archived: !post.archived)
+
+    flash[:notice] = post.archived? ? "アーカイブしました" : "アーカイブを解除しました"
+    redirect_to post_path(post)
+  end
 end

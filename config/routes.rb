@@ -71,4 +71,13 @@ Rails.application.routes.draw do
 
   # 投稿プリセット
   resources :presets, only: [ :index, :new, :create, :edit, :update, :destroy ]
+
+  # アーカイブ
+  resources :posts, only: [ :show, :edit, :update, :destroy ] do
+    member do
+      patch :toggle_archive
+    end
+  end
+
+  get "main/archive", to: "main#archive", as: :archive_posts
 end
