@@ -106,7 +106,7 @@
       <div class="flex justify-center mt-4 space-x-2">
         <%# 前へ %>
         <% if @posts.prev_page %>
-          <%= link_to '前', url_for(params.permit!.to_h.merge(page: @posts.prev_page)), class: "px-3 py-1 rounded-full border bg-white hover:bg-accent-orange hover:text-white transition" %>
+          <%= link_to '前', url_for(params.permit(:q, :sort, :category, :archived, :my_posts, :revealed).to_h.merge(page: @posts.prev_page)), class: "px-3 py-1 rounded-full border bg-white hover:bg-accent-orange hover:text-white transition" %>
         <% else %>
           <span class="px-3 py-1 rounded-full border bg-white text-wood-light">◁</span>
         <% end %>
@@ -116,16 +116,17 @@
           <% if page == @posts.current_page %>
             <span class="px-3 py-1 rounded-full border bg-accent-orange text-white"><%= page %></span>
           <% else %>
-            <%= link_to page, url_for(params.permit!.to_h.merge(page: page)), class: "px-3 py-1 rounded-full border bg-white hover:bg-accent-orange hover:text-white transition" %>
+            <%= link_to page, url_for(params.permit(:q, :sort, :category, :archived, :my_posts, :revealed).to_h.merge(page: page)), class: "px-3 py-1 rounded-full border bg-white hover:bg-accent-orange hover:text-white transition" %>
           <% end %>
         <% end %>
 
         <%# 次へ %>
         <% if @posts.next_page %>
-          <%= link_to '次', url_for(params.permit!.to_h.merge(page: @posts.next_page)), class: "px-3 py-1 rounded-full border bg-white hover:bg-accent-orange hover:text-white transition" %>
+          <%= link_to '次', url_for(params.permit(:q, :sort, :category, :archived, :my_posts, :revealed).to_h.merge(page: @posts.next_page)), class: "px-3 py-1 rounded-full border bg-white hover:bg-accent-orange hover:text-white transition" %>
         <% else %>
           <span class="px-3 py-1 rounded-full border bg-white text-wood-light">▷</span>
         <% end %>
+
       </div>
 
 
