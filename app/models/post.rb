@@ -19,6 +19,9 @@ class Post < ApplicationRecord
     high: 2
   }
 
+  scope :active, -> { where(archived: false) } 
+  scope :archived, -> { where(archived: true) } 
+
   def sense_level_jp
     case sense_level
     when "low" then "低"
@@ -75,6 +78,13 @@ class Post < ApplicationRecord
     return nil unless reveal_at && created_at
     (reveal_at - created_at).to_i
   end
+
+  # 検索
+  def self.search_title(q)
+      return all if q.blank?
+      where("title LIKE ?", "%#{q}%")
+  end
+
 
   private
 

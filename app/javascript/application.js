@@ -92,3 +92,79 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+
+// 並べ替え絞り込み
+document.addEventListener("turbo:load", () => {
+  const toggleButtons = document.querySelectorAll("#filters-form button[type='button']");
+
+  const labelMap = {
+    "my-posts-field": { all: "すべての投稿", self: "自分の投稿", partner: "相手の投稿" },
+    "revealed-field": { all: "すべての投稿", before: "答え合わせ前", after: "答え合わせ後" },
+    "archived-field": { false: "公開中のみ", true: "アーカイブのみ" }
+  };
+
+  const toggleMap = {
+    "my-posts-field": ["all", "self", "partner"],
+    "revealed-field": ["all", "before", "after"],
+    "archived-field": ["false", "true"]
+  };
+
+  const bgMap = {
+    "all": "bg-white",
+    "false": "bg-white",
+    "self": "bg-sage",
+    "before": "bg-sage",
+    "true": "bg-forest-green",
+    "partner": "bg-forest-green",
+    "after": "bg-forest-green"
+  };
+
+  toggleButtons.forEach(btn => {
+    const targetId = btn.dataset.target;
+    const hiddenField = document.getElementById(targetId);
+
+    if (!hiddenField.value) hiddenField.value = targetId === "archived-field" ? "false" : "all";
+
+    // 初期ラベルと色
+    btn.textContent = labelMap[targetId][hiddenField.value];
+    btn.classList.remove("bg-white", "bg-sage", "bg-forest-green", "text-white", "text-wood-dark");
+
+    btn.classList.add(bgMap[hiddenField.value]);
+    // forest-green のときだけ文字を白に
+    if (hiddenField.value === "true" || hiddenField.value === "partner" || hiddenField.value === "after") {
+      btn.classList.add("text-white");
+    } else {
+      btn.classList.add("text-wood-dark");
+    }
+
+    btn.addEventListener("click", () => {
+      const values = toggleMap[targetId];
+      const currentIndex = values.indexOf(hiddenField.value);
+      const nextIndex = (currentIndex + 1) % values.length;
+      hiddenField.value = values[nextIndex];
+
+      // ラベル更新
+      btn.textContent = labelMap[targetId][hiddenField.value];
+
+      // 背景色更新
+      btn.classList.remove("bg-white", "bg-sage", "bg-forest-green", "text-white", "text-wood-dark");
+      btn.classList.add(bgMap[hiddenField.value]);
+
+      // forest-green のときだけ文字を白に
+      if (hiddenField.value === "true" || hiddenField.value === "partner" || hiddenField.value === "after") {
+        btn.classList.add("text-white");
+      } else {
+        btn.classList.add("text-wood-dark");
+      }
+
+      // フォーム送信
+      hiddenField.form.submit();
+    });
+  });
+
+  // 並び替えセレクト
+  const sortSelect = document.querySelector("#filters-form select[name='sort']");
+  if (sortSelect) {
+    sortSelect.addEventListener("change", () => sortSelect.form.submit());
+  }
+});

@@ -11,12 +11,15 @@
       <h2 class="text-xl font-semibold text-forest-green font-heading break-words flex-1 min-w-0">
         <%= @post.title_for_view(current_user) %>
       </h2>
-
     </div>
 
-
-
     <!-- 投稿情報 -->
+    <!-- タイトル下あたりにアーカイブ状態 -->
+    <p class="text-sm font-medium <%= @post.archived? ? 'text-red-600' : 'text-green-600' %>">
+      状態：<%= @post.archived? ? "アーカイブ済み" : "公開中" %>
+    </p>
+
+
     <p class="text-sm text-wood-dark">カテゴリ：<%= @post.category.name %></p>
     <p class="text-sm text-wood-dark">優先度：<%= @post.sense_level_jp %></p>
 
@@ -55,21 +58,32 @@
   <% end %>
 
   <!-- 編集・削除（投稿者のみ） -->
-  <% if @post.user == current_user %>
     <div class="flex gap-3">
-      <%= link_to edit_post_path(@post),
-            class: "btn btn-secondary flex items-center gap-1 justify-center" do %>
-        ✏️ 編集
+      <% if @post.user == current_user %>
+        <%= link_to edit_post_path(@post),
+              class: "btn btn-secondary flex items-center gap-1 justify-center" do %>
+          ✏️ 編集
+        <% end %>
+
+        <%= button_to post_path(@post),
+              method: :delete,
+              data: { turbo_confirm: "本当に削除しますか？" },
+              class: "btn btn-danger flex items-center gap-1 justify-center" do %>
+          🗑️ 削除
+        <% end %>
       <% end %>
 
-      <%= button_to post_path(@post),
-            method: :delete,
-            data: { turbo_confirm: "本当に削除しますか？" },
-            class: "btn btn-danger flex items-center gap-1 justify-center" do %>
-        🗑️ 削除
-      <% end %>
+      <!-- アーカイブボタン -->
+      <%= button_to @post.archived? ? "アーカイブ解除" : "アーカイブする",
+          toggle_archive_post_path(@post),
+          method: :patch,
+          data: { turbo_frame: "archive_status", turbo_confirm: "アーカイブ状態を変更しますか？相手の画面でも表示が変わります" },
+          class: "btn btn-danger flex items-center gap-1 justify-center" %>
+
     </div>
-  <% end %>
+
+
+
 
   <!-- 自分用メモ -->
   <div class="bg-wood-light/30 rounded-lg p-4 space-y-3">

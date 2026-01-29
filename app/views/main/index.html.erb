@@ -14,31 +14,69 @@
     </div>
   <% end %>
 
-  <!-- 検索欄（仮） -->
+  <!-- 検索欄 -->
   <div class="flex items-center space-x-2">
-    <input
-      type="text"
-      placeholder="投稿の検索（工事中）"
-      class="flex-1 rounded-lg px-3 py-2 text-sm bg-white shadow-sm"
-    />
-    <button class="btn btn-secondary">
-      検索
-    </button>
+    <%= form_with url: main_path, method: :get, local: true, class: "flex-1 flex items-center space-x-2" do |f| %>
+      <%= f.text_field :q, value: params[:q], placeholder: "投稿の検索", class: "flex-1 rounded-lg px-3 py-2 text-sm bg-white shadow-sm" %>
+      <%= f.submit "検索", class: "btn btn-secondary" %>
+    <% end %>
   </div>
 
-  <!-- 並び替えセレクト -->
-  <div class="flex items-center space-x-2 mt-2">
-    <%= form_with url: main_path, method: :get, local: true do |f| %>
-      <%= f.label :sort, "並び替え:", class: "text-sm font-medium text-wood-dark" %>
+
+  <%= form_with url: main_path, method: :get, local: true, id: "filters-form", class: "flex flex-col gap-2" do |f| %>
+    <!-- 並び替え（横並び） -->
+    <div class="flex items-center space-x-2">
+      <%= f.label :sort, "並び替え:", class: "text-xs text-wood-dark" %>
       <%= f.select :sort,
             [["優先度順", "priority"], ["投稿が新しい順", "new"], ["答え合わせが近い順", "reveal"]],
             { selected: params[:sort] },
-            class: "rounded-lg border px-2 py-1 text-sm"
+            class: "rounded-lg border px-1 py-1 text-sm"
       %>
 
-      <%= f.submit "適用", class: "btn btn-secondary" %>
-    <% end %>
-  </div>
+      <!-- カテゴリ絞り込み -->
+      <%= f.label :category, "カテゴリ:", class: "text-xs text-wood-dark" %>
+      <%= f.select :category,
+            [["すべて", "all"]] + Category.all.map { |c| [c.name, c.name] },
+            { selected: params[:category] || "all" },  # 最初は「すべて」
+            class: "rounded-lg border px-1 py-1 text-sm",
+            onchange: "this.form.submit();" # 選択したら自動submit
+      %>
+    </div>
+
+  <!-- 絞り込み -->
+    <div class="flex flex-wrap gap-2 mt-2">
+      <span class="text-xs text-wood-dark w-full mb-1">絞り込み:</span>
+
+      <!-- アーカイブ -->
+      <%= f.hidden_field :archived, value: params[:archived] || "false", id: "archived-field" %>
+      <button type="button"
+              class="flex-1 h-8 rounded border text-sm flex items-center justify-center
+                    <%= params[:archived] == 'true' ? 'bg-accent-orange text-white' : 'bg-white text-wood-dark' %>"
+              data-target="archived-field">
+        公開中のみ
+      </button>
+
+      <!-- 自分 / 相手 / すべて -->
+      <%= f.hidden_field :my_posts, value: params[:my_posts] || "all", id: "my-posts-field" %>
+      <button type="button"
+              class="flex-1 h-8 rounded border text-sm flex items-center justify-center
+                    <%= params[:my_posts] == 'true' ? 'bg-accent-orange text-white' : (params[:my_posts] == 'false' ? 'bg-accent-green text-white' : 'bg-white text-wood-dark') %>"
+              data-target="my-posts-field">
+        すべての投稿
+      </button>
+
+      <!-- 答え合わせ -->
+      <%= f.hidden_field :revealed, value: params[:revealed] || "all", id: "revealed-field" %>
+      <button type="button"
+              class="flex-1 h-8 rounded border text-sm flex items-center justify-center
+                    <%= params[:revealed] == 'true' ? 'bg-accent-orange text-white' : (params[:revealed] == 'false' ? 'bg-accent-green text-white' : 'bg-white text-wood-dark') %>"
+              data-target="revealed-field">
+        すべての投稿
+      </button>
+    </div>
+
+  <% end %>
+
 
 
   <!-- 投稿一覧 -->
@@ -49,6 +87,35 @@
             post: post,
             last_viewed_at: @last_viewed_at %>
       <% end %>
+
+      <!-- ページネーション -->
+      <div class="flex justify-center mt-4 space-x-2">
+        <%# 前へ %>
+        <% if @posts.prev_page %>
+          <%= link_to '前', url_for(params.permit!.to_h.merge(page: @posts.prev_page)), class: "px-3 py-1 rounded-full border bg-white hover:bg-accent-orange hover:text-white transition" %>
+        <% else %>
+          <span class="px-3 py-1 rounded-full border bg-gray-200 text-gray-400">前</span>
+        <% end %>
+
+        <%# ページ番号 %>
+        <% (1..@posts.total_pages).each do |page| %>
+          <% if page == @posts.current_page %>
+            <span class="px-3 py-1 rounded-full border bg-accent-orange text-white"><%= page %></span>
+          <% else %>
+            <%= link_to page, url_for(params.permit!.to_h.merge(page: page)), class: "px-3 py-1 rounded-full border bg-white hover:bg-accent-orange hover:text-white transition" %>
+          <% end %>
+        <% end %>
+
+        <%# 次へ %>
+        <% if @posts.next_page %>
+          <%= link_to '次', url_for(params.permit!.to_h.merge(page: @posts.next_page)), class: "px-3 py-1 rounded-full border bg-white hover:bg-accent-orange hover:text-white transition" %>
+        <% else %>
+          <span class="px-3 py-1 rounded-full border bg-gray-200 text-gray-400">次</span>
+        <% end %>
+      </div>
+
+
+
     <% else %>
       <div class="bg-white rounded-xl p-6 text-wood-light text-sm shadow-sm">
         投稿がまだありません
@@ -56,6 +123,8 @@
     <% end %>
   </div>
 </div>
+
+
 
 
 <!-- 右下の追加ボタン -->
