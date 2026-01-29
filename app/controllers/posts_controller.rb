@@ -78,7 +78,7 @@ class PostsController < ApplicationController
     )
   end
 
-    # アーカイブ・復元切替
+  # アーカイブ・復元切替
   def toggle_archive
     post = Post.find(params[:id])
     post.update!(archived: !post.archived)
@@ -86,5 +86,4 @@ class PostsController < ApplicationController
     flash[:notice] = post.archived? ? "アーカイブしました" : "アーカイブを解除しました"
     redirect_to post_path(post)
   end
-
 end

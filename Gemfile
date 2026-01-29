@@ -71,4 +71,4 @@ end
 
 gem "resend"
 
-gem 'kaminari'
+gem "kaminari"

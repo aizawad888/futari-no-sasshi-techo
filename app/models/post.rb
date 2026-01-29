@@ -19,8 +19,8 @@ class Post < ApplicationRecord
     high: 2
   }
 
-  scope :active, -> { where(archived: false) } 
-  scope :archived, -> { where(archived: true) } 
+  scope :active, -> { where(archived: false) }
+  scope :archived, -> { where(archived: true) }
 
   def sense_level_jp
     case sense_level
